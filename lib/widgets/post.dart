@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ipfs_client_flutter/ipfs_client_flutter.dart';
+import 'package:voting_dapp/services/services.dart';
 
 class Post extends StatefulWidget {
   const Post({super.key});
@@ -104,8 +106,9 @@ class _PostState extends State<Post> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
-                            onPressed: () {
-                              uploadImage();
+                            onPressed: () async {
+                              // uploadImage();
+                              await IPFSServices().uploadIpfs();
                             },
                             child: const Text(
                               'Upload Image',
