@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         home: Scaffold(
             appBar: AppBar(
               title: const AppBars(),
-              toolbarHeight: 100,
+              toolbarHeight: 80,
               elevation: 5,
               flexibleSpace: Container(
                 decoration: const BoxDecoration(
@@ -32,6 +32,6 @@ class MyApp extends StatelessWidget {
               ),
             ),
             // drawer: const Drawers(),
-            body: LoginPage()));
+            body: LoginPage(),),);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voting_dapp/widgets/createVote.dart';
 
 class AppBars extends StatelessWidget {
   const AppBars({super.key});
@@ -17,7 +18,9 @@ class AppBars extends StatelessWidget {
               fontSize: 45),
         ),
         OutlinedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => createVote()));
+            },
             child: const Text(
               'Create Vote',
               style: TextStyle(color: Colors.white),
