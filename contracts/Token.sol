@@ -1,8 +1,10 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 import "hardhat/console.sol";
+import "@openzeppelin/contracts/metatx/ERC2771Context.sol";
+import "@openzeppelin/contracts/metatx/MinimalForwarder.sol";
 
-contract CollegeContract {
+contract CollegeContract is ERC2771Context {
     string private name = "voteth";
     string private sym = "ETHEC";
 
@@ -10,13 +12,13 @@ contract CollegeContract {
     // address of the contract deployer.
     mapping(address => bool) private admins;
     string allowedUser = "ipfsLink";
-
-    constructor(){
-        admins[msg.sender] = true;
+    
+    constructor(MinimalForwarder forwarder) ERC2771Context(address(forwarder)) {
+        admins[_msgSender()] = true;
     }
-
+    
     modifier onlyAdmin {
-        require(admins[msg.sender], "Unauthorized Request");
+        require(admins[_msgSender()], "Unauthorized Request");
         _;
     }
 
