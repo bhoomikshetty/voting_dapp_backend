@@ -8,6 +8,7 @@ async function main(){
     const token = await contract.deploy();
     
     console.log("Token address (Contract Address):", token.address);
+    console.log(token)
 }
 
 main().then(()=>process.exit(0)).catch((err)=>{console.log(err);process.exit(1)})

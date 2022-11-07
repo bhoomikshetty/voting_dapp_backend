@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voting_dapp/loginPage.dart';
 import './models/polls.dart';
 import './models/post.dart';
 import './models/suggestion.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
                 ])),
               ),
             ),
-            drawer: const Drawers(),
-            body: const Events()));
+            // drawer: const Drawers(),
+            body: LoginPage()));
   }
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web3/flutter_web3.dart';
 
 class MetaMaskProvider extends ChangeNotifier {
-  static const operatingChainID = 1;
-  static const operatingChainName = 'Ethereum Mainnet';
+  static const operatingChainID = 5;
+  static const operatingChainName = 'Goerli Testnet';
   String currentAddress = '';
   int currentChainID = -1;
   bool get isEnabled => ethereum != null;
@@ -16,6 +16,7 @@ class MetaMaskProvider extends ChangeNotifier {
         currentAddress = accs.first;
       }
       currentChainID = await ethereum!.getChainId();
+      
       notifyListeners();
     }
   }

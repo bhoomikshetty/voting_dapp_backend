@@ -1,14 +1,40 @@
+import 'dart:convert';
+
 import 'package:ipfs_client_flutter/ipfs_client_flutter.dart';
+import 'dart:js' as js;
+import 'package:http/http.dart' as http;
 
 class IPFSServices {
-  IpfsClient ipfsClient = IpfsClient();
+  //  var input = {
+//                               "address": "dkvubefu",
+//                               "content": {
+//                                 'images': '',
+//                                 'text': '',
+//                               }
+//                             };
+//                             String jinput = json.encode(input);
+//                             var some = await createAlbum(jinput);
+//                             Map ad = json.decode(some.body.toString());
+//                             var ssd = await getAl(ad['link'][0]['path']); // getting the path of the data.
+//                             var finalOp = json.decode(ssd.body); // _toJson
+//                             Map finalMap = Map.from(finalOp); // toMap
+//                             Map finafinalMap =
+//                                 json.decode(finalMap.keys.toList()[0]); //_toJson of key(main content)
 
-  uploadIpfs() async {
-    var res1 = await ipfsClient.write(
-        dir: 'testpath3/Simulator.png',
-        filePath: "C:\Users\Admin\Desktop\final_repo\voting_dapp_backend\assets\images",
-        fileName: "background.jpg");
-    var res2 = await ipfsClient.ls(dir: "testDir");
-    print(res1.toString() + " " + res2.toString());
+  Future createAlbum(String title) async {
+    return await http.post(
+      Uri.parse('http://localhost:8000/upload'),
+      headers: <String, String>{
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      encoding: Encoding.getByName('utf-8'),
+      body: title,
+    );
+  }
+
+  Future<http.Response> getAl(String title) {
+    return http.get(
+      Uri.parse(title),
+    );
   }
 }

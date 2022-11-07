@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:ipfs_client_flutter/ipfs_client_flutter.dart';
 import 'package:voting_dapp/services/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:voting_dapp/services/smartContractServices.dart';
+import '../models/post.dart';
 
 class Post extends StatefulWidget {
   const Post({super.key});
@@ -17,8 +21,14 @@ class Post extends StatefulWidget {
 class _PostState extends State<Post> {
   File _file = File('zz');
 
-  late Uint8List webImage;
+  TextEditingController titleTextEditing = TextEditingController();
+  TextEditingController contentTextEditing = TextEditingController();
+  String? imageUrl;
 
+  List<int> imageBytes = [];
+  String base64Image = '';
+  late Uint8List webImage;
+  Widget? testOutImage;
   uploadImage() async {
     if (kIsWeb) {
       final ImagePicker picker = ImagePicker();
@@ -28,9 +38,6 @@ class _PostState extends State<Post> {
         setState(() {
           _file = File("c");
           webImage = f;
-          print(kIsWeb);
-          print(_file);
-          print(f);
         });
       } else {
         showToast("No file selected");
@@ -54,16 +61,19 @@ class _PostState extends State<Post> {
 
   final int counter = 0;
   Widget display() {
-    return SizedBox(
-      height: 50,
-      child: (_file.path == "zz")
-          ? Image.asset("../images/boy.png")
-          : (kIsWeb)
-              ? Image.memory(webImage)
-              : Image.file(_file),
-    );
+    return testOutImage != null
+        ? testOutImage!
+        : SizedBox(
+            height: 50,
+            child: (_file.path == "zz")
+                ? Image.asset("../images/boy.png")
+                : (kIsWeb)
+                    ? Image.memory(webImage)
+                    : Image.file(_file),
+          );
   }
 
+  var output;
   @override
   Widget build(BuildContext context) {
     if (counter == 0) {
@@ -107,8 +117,17 @@ class _PostState extends State<Post> {
                         children: [
                           ElevatedButton(
                             onPressed: () async {
-                              // uploadImage();
-                              await IPFSServices().uploadIpfs();
+                              XFile? image = await ImagePicker()
+                                  .pickImage(source: ImageSource.gallery);
+                              if (image != null) {
+                                imageBytes = await image.readAsBytes();
+                                base64Image = base64.encode(imageBytes);
+                                http.Response out = await IPFSServices()
+                                    .createAlbum(json.encode(base64Image));
+                                setState(() {
+                                  imageUrl = json.decode(out.body);
+                                });
+                              }
                             },
                             child: const Text(
                               'Upload Image',
@@ -117,20 +136,24 @@ class _PostState extends State<Post> {
                             ),
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              setState(
-                                () {
-                                  display();
-                                },
-                              );
-                              display();
-                            },
-                            child: const Text('Overview Of Post'),
-                          ),
+                              onPressed: () {
+                                setState(
+                                  () {
+                                    display();
+                                  },
+                                );
+                                display();
+                              },
+                              child: output == null
+                                  ? Container()
+                                  : Image.memory(
+                                      Base64Decoder()
+                                          .convert(output.split(',').last),
+                                    )),
                         ],
                       ),
-                      const TextField(
-                        maxLines: 8,
+                      TextFormField(
+                        controller: contentTextEditing,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           labelText: 'Type Here',
@@ -142,7 +165,17 @@ class _PostState extends State<Post> {
               ),
             ),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  // PostModel(
+                  //         address: '0x00235sd5cs6',
+                  //         id: DateTime.now().microsecondsSinceEpoch.toString(),
+                  //         title_bar: titleTextEditing.text,
+                  //         image_url: imageUrl,
+                  //         text: contentTextEditing.text)
+                  //     .getMap();
+                  var out = await EthereumUtils().getQuote();
+                  print(out);
+                },
                 child: const Text(
                   'Post',
                   style: TextStyle(color: Colors.white),

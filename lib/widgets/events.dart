@@ -3,69 +3,12 @@ import 'package:voting_dapp/models/post.dart';
 import 'package:voting_dapp/models/suggestion.dart';
 import 'package:flutter/material.dart';
 
-final List<Post> post = [
-  Post(
-      image_url: './images/image2.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
+final List<PostModel> post = [
+  PostModel(
+      address: "0x484x5f4v5f4",
       image_url: './images/image1.png',
       title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png',
-      title_bar: 'This is the title',
-      id: '1'),
-  Post(
-      image_url: './images/image1.png', title_bar: 'This is the title', id: '1')
+      id: '1')
 ];
 
 final List<suggestionBox> suggestion = [
@@ -111,7 +54,7 @@ class Events extends StatelessWidget {
                       elevation: 5,
                       child: Column(
                         children: [
-                          Image.asset(display.image_url),
+                          Image.asset(display.image_url!),
                           Text(display.title_bar)
                         ],
                       )),

@@ -85,6 +85,7 @@ class MetaMask extends StatelessWidget {
               late final String message;
               if (provider.isConnected && provider.isInOperatingChain) {
                 message = 'Connected';
+                
               } else if (provider.isConnected && !provider.isInOperatingChain) {
                 message =
                     'Wrong chain. Please connect to -\n${MetaMaskProvider.operatingChainName}';
