@@ -1,11 +1,12 @@
 import 'dart:typed_data';
+
 import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:ipfs_client_flutter/ipfs_client_flutter.dart';
-import 'package:voting_dapp/services/services.dart';
+import 'package:voting_dapp/widgets/events.dart';
 
 class Post extends StatefulWidget {
   const Post({super.key});
@@ -21,8 +22,8 @@ class _PostState extends State<Post> {
 
   uploadImage() async {
     if (kIsWeb) {
-      final ImagePicker picker = ImagePicker();
-      XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
         var f = await image.readAsBytes();
         setState(() {
@@ -52,12 +53,12 @@ class _PostState extends State<Post> {
     );
   }
 
-  final int counter = 0;
+  int counter = 0;
   Widget display() {
-    return SizedBox(
+    return Container(
       height: 50,
       child: (_file.path == "zz")
-          ? Image.asset("../images/boy.png")
+          ? Text('no')
           : (kIsWeb)
               ? Image.memory(webImage)
               : Image.file(_file),
@@ -65,117 +66,164 @@ class _PostState extends State<Post> {
   }
 
   @override
+  final _text = TextEditingController();
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    // print(_text);
     if (counter == 0) {
       return Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(250, 120, 39, 134),
-              Color.fromARGB(255, 0, 0, 0),
-              Color.fromARGB(255, 4, 83, 148),
-            ],
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            const Text(
-              "Create Post Here",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 500,
-              width: 800,
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Colors.yellow,
-                        width: 2,
-                        style: BorderStyle.solid),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () async {
-                              // uploadImage();
-                              await IPFSServices().uploadIpfs();
-                            },
-                            child: const Text(
-                              'Upload Image',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+          Color.fromARGB(250, 120, 39, 134),
+          Color.fromARGB(255, 0, 0, 0),
+          Color.fromARGB(255, 4, 83, 148)
+        ])),
+        child: Card(
+          margin: const EdgeInsets.all(10.0),
+          color: Colors.transparent,
+          shape: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 194, 222, 245),
+                width: 1,
+              )),
+          elevation: 8,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                "Create Post Here",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold),
+              ),
+              Container(
+                height: 500,
+                width: 800,
+                child: Center(
+                  child: Container(
+                    // decoration: BoxDecoration(
+                    //     border: Border.all(
+                    //         color: Colors.yellow,
+                    //         width: 2,
+                    //         style: BorderStyle.solid)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  uploadImage();
+                                },
+                                // elevation: 5,
+                                child: Text(
+                                  'Upload Image',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  display();
+                                  counter = 1;
+                                });
+                              },
+                              child: Text('Overview Of Post'),
+                            )
+                          ],
+                        ),
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: height,
+                            maxWidth: width,
+                          ),
+                          child: TextField(
+                            controller: _text,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            minLines: 1,
+                            decoration: InputDecoration(
+                              fillColor: Colors.transparent,
+                              filled: true,
+                              hintText: "Drop your suggestions here: ",
+                              border: InputBorder.none,
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(
-                                () {
-                                  display();
-                                },
-                              );
-                              display();
-                            },
-                            child: const Text('Overview Of Post'),
-                          ),
-                        ],
-                      ),
-                      const TextField(
-                        maxLines: 8,
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          labelText: 'Type Here',
                         ),
-                      ),
-                    ],
+                        // TextField(
+                        //   maxLines: 8,
+                        //   style: TextStyle(color: Colors.white),
+
+                        //   decoration: InputDecoration(
+                        //     labelText: 'Type Here',
+                        //   ),
+                        // )
+                      ],
+                    ),
                   ),
                 ),
               ),
+              ElevatedButton(
+                  onPressed: () {
+                    print(_text.text);
+                  },
+                  child: Text(
+                    'Post',
+                    style: TextStyle(color: Colors.white),
+                  ))
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        height: double.infinity,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+          Color.fromARGB(250, 120, 39, 134),
+          Color.fromARGB(255, 0, 0, 0),
+          Color.fromARGB(255, 4, 83, 148)
+        ])),
+        child: Column(
+          children: [
+            (_file.path == "zz")
+                ? Text('No')
+                : (kIsWeb)
+                    ? Image.memory(
+                        webImage,
+                        width: 500,
+                      )
+                    : Image.file(
+                        _file,
+                        width: 500,
+                      ),
+            SizedBox(
+              height: 20,
+              width: double.infinity,
             ),
+            Container(
+                child: Card(
+              child: Text(
+                _text.text,
+                style: TextStyle(color: Colors.black),
+              ),
+            )),
             ElevatedButton(
-                onPressed: () {},
-                child: const Text(
+                onPressed: () {
+                  // Navigator.pop(context);
+                },
+                child: Text(
                   'Post',
                   style: TextStyle(color: Colors.white),
                 ))
           ],
         ),
       );
-    } else {
-      return Column();
     }
-
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: Text("Upload Image"),
-    //   ),
-    //   body: Column(
-    //     children: [
-
-    //       (_file.path == "zz")
-    //           ? Image.asset("../images/boy.png")
-    //           : (kIsWeb)
-    //               ? Image.memory(webImage)
-    //               : Image.file(_file),
-    //       SizedBox(
-    //         height: 20,
-    //         width: double.infinity,
-    //       ),
-    //       ElevatedButton(
-    //         onPressed: () => uploadImage(),
-    //         child: Text("Upload"),
-    //       )
-    //     ],
-    //   ),
-    // );
   }
 }

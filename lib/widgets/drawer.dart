@@ -1,9 +1,19 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:voting_dapp/pages/create_post.dart';
+import 'package:image_picker/image_picker.dart';
 
-class Drawers extends StatelessWidget {
+
+List<String> list = <String>['Public', 'Private'];
+
+class Drawers extends StatefulWidget {
   const Drawers({super.key});
 
+  @override
+  State<Drawers> createState() => _DrawersState();
+}
+File? imageFile;
+class _DrawersState extends State<Drawers> {
   Route _createRoute() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
@@ -58,8 +68,11 @@ class Drawers extends StatelessWidget {
                 leading: Image.asset('./images/image1.png'),
                 title: const Text('Create SuggestionBox'),
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.of(context).push(_createRoute());
+                  showDialog(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    _buildPopupDialog(context),
+                              );
                 },
               ),
             ),
@@ -111,4 +124,138 @@ class Drawers extends StatelessWidget {
       ),
     );
   }
+  _getFromGallery() async {
+    PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
+    }
+  }
+  Widget _buildPopupDialog(BuildContext context) {
+  double width = MediaQuery.of(context).size.width;
+  double height = MediaQuery.of(context).size.height;
+  String dropdownValue = list.first;
+  return AlertDialog(
+    elevation: 30.0,
+    backgroundColor: Colors.white,
+    shape: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: const BorderSide(
+          color: Color.fromARGB(255, 194, 222, 245),
+          width: 1,
+        )),
+    content: Builder(
+      builder: (context) {
+        var height = MediaQuery.of(context).size.height;
+        var width = MediaQuery.of(context).size.width;
+
+        return SizedBox(
+          height: height - 400,
+          width: width - 1000,
+          child: Container(
+            child: Column(
+              children: [
+                const Text(
+                  "Suggestions",
+                  style: TextStyle(color: Colors.orange),
+                ),
+                //public or private
+                SizedBox(
+                  height: 38,
+                  width: 200.0,
+                  child: Card(
+                    color: Colors.transparent,
+                    shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 194, 222, 245),
+                          width: 1,
+                        )),
+                    elevation: 20,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.man,
+                          color: Colors.black,
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: DropdownButton<String>(
+                            value: dropdownValue,
+                            icon: const Icon(Icons.arrow_drop_down_outlined),
+                            elevation: 16,
+                            style: const TextStyle(color: Colors.blue),
+                            underline: Container(
+                              color: Colors.blue,
+                            ),
+                            onChanged: (String? value) {
+                              // setState(() {
+                              //   dropdownValue = value!;
+                              // });
+                            },
+                            items: list
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: height,
+                    maxWidth: width,
+                  ),
+                  child: const TextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    minLines: 1,
+                    decoration: InputDecoration(
+                      fillColor: Colors.transparent,
+                      filled: true,
+                      hintText: "Drop your suggestions here: ",
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      _getFromGallery();
+                    },
+                    child: Text("Pick Photo"),
+                  ),
+                  Container(
+                    height: 40.0,
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    ),
+    actions: <Widget>[
+      TextButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: const Text('Close'),
+      ),
+    ],
+  );
 }
+
+}
+
+
+
