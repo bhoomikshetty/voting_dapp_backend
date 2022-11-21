@@ -150,7 +150,7 @@ class _PostState extends State<Post> {
                             decoration: InputDecoration(
                               fillColor: Colors.transparent,
                               filled: true,
-                              hintText: "Drop your suggestions here: ",
+                              hintText: "Write about your post: ",
                               border: InputBorder.none,
                             ),
                           ),
@@ -214,9 +214,7 @@ class _PostState extends State<Post> {
               ),
             )),
             ElevatedButton(
-                onPressed: () {
-                  // Navigator.pop(context);
-                },
+                onPressed: () {},
                 child: Text(
                   'Post',
                   style: TextStyle(color: Colors.white),
