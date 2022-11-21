@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:voting_dapp/loginPage.dart';
 import 'package:voting_dapp/pages/contribute.dart';
 import 'package:voting_dapp/pages/create_polls.dart';
 import 'package:voting_dapp/pages/create_post.dart';
@@ -8,7 +9,8 @@ import 'package:image_picker/image_picker.dart';
 List<String> list = <String>['Public', 'Private'];
 
 class Drawers extends StatefulWidget {
-  const Drawers({super.key});
+  Function? callback;
+  Drawers({super.key, this.callback});
 
   @override
   State<Drawers> createState() => _DrawersState();
@@ -124,7 +126,8 @@ class _DrawersState extends State<Drawers> {
                 leading: const Icon(Icons.logout_sharp),
                 title: const Text('LogOut'),
                 onTap: () {
-                  Navigator.pop(context);
+                  widget.callback(null);
+                  // Navigator.pop(context);
                 },
               ),
             )

@@ -98,7 +98,7 @@ class _createVoteState extends State<createVote> {
               ])),),
          
           ),
-        drawer: Drawers(),
+        drawer: Drawers(callback: callback: setLogin,) : null,
         body: Container(
             width: double.infinity,
             height: double.infinity,

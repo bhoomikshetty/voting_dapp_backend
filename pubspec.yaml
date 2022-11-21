@@ -68,6 +68,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - images/
     - assets/images/
     - assets/fonts/
     - artifact/contracts/Token.sol/CollegeContract.json/

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voting_dapp/loginPage.dart';
 import './models/polls.dart';
 import './models/post.dart';
 import './models/suggestion.dart';
@@ -10,8 +11,22 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool check = false;
+  setLogin(String? address) {
+    if (address != null) {
+      setState(() {
+        check = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +45,11 @@ class MyApp extends StatelessWidget {
                 ])),
               ),
             ),
-            drawer: const Drawers(),
-            body: const Events()));
+            drawer: check ? Drawers() : null,
+            body: check
+                ? Events()
+                : LoginPage(
+                    callback: setLogin,
+                  )));
   }
 }

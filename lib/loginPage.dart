@@ -4,8 +4,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'metamask_provider.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  Function callback;
+  LoginPage({super.key, required this.callback});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +66,9 @@ class LoginPage extends StatelessWidget {
                     width: 300,
                     height: 120,
                     alignment: Alignment.centerLeft,
-                    child: const MetaMask(),
+                    child: MetaMask(
+                      callback: widget.callback,
+                    ),
                   ),
                 ],
               ),
@@ -71,8 +80,15 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class MetaMask extends StatelessWidget {
-  const MetaMask({Key? key}) : super(key: key);
+class MetaMask extends StatefulWidget {
+  Function callback;
+  MetaMask({required this.callback});
+
+  @override
+  State<MetaMask> createState() => _MetaMaskState();
+}
+
+class _MetaMaskState extends State<MetaMask> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -89,6 +105,7 @@ class MetaMask extends StatelessWidget {
                 message =
                     'Wrong chain. Please connect to -\n${MetaMaskProvider.operatingChainName}';
               } else if (provider.isEnabled) {
+                widget.callback(provider.currentAddress);
                 return MaterialButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -128,8 +145,14 @@ class MetaMask extends StatelessWidget {
   }
 }
 
-class Welcome extends StatelessWidget {
+class Welcome extends StatefulWidget {
   const Welcome({super.key});
+
+  @override
+  State<Welcome> createState() => _WelcomeState();
+}
+
+class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -164,7 +187,7 @@ class Welcome extends StatelessWidget {
                         ),
                       ),
                       TextSpan(
-                        text: '\n      VotersFeild.',
+                        text: '\n      College Dropbox.',
                         style: GoogleFonts.lato(
                           color: Colors.white,
                           fontSize: 55,

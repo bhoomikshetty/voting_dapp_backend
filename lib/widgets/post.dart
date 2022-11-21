@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:voting_dapp/main.dart';
 import 'package:voting_dapp/widgets/events.dart';
 
 class Post extends StatefulWidget {
@@ -170,6 +171,10 @@ class _PostState extends State<Post> {
               ),
               ElevatedButton(
                   onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyApp()),
+                    );
                     print(_text.text);
                   },
                   child: Text(
@@ -214,7 +219,12 @@ class _PostState extends State<Post> {
               ),
             )),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyApp()),
+                  );
+                },
                 child: Text(
                   'Post',
                   style: TextStyle(color: Colors.white),
